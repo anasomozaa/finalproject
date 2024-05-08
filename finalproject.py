@@ -109,7 +109,7 @@ for country in countnames: #creating a loop to show graphs per country selected
     option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
 
     #plotting the options of each country per activity type 
-    st.bar_chart(contributions_by_year_activity[option])
+    st.bar_chart(contributions_by_year_activity[option], color = 'pink')
     
 
 
