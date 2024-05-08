@@ -41,73 +41,74 @@ country_acronyms = {'Belgium': 'BE', 'Bulgaria': 'BG', 'Czechia': 'CZ', 'Denmark
                     'Luxembourg': 'LU', 'Hungary': 'HU', 'Malta': 'MT', 'Netherlands': 'NL', 'Austria': 'AT',
                     'Poland': 'PL', 'Portugal': 'PT', 'Romania': 'RO', 'Slovenia': 'SI', 'Slovakia': 'SK',
                     'Finland': 'FI', 'Sweden': 'SE'}
-countnames = st.multiselect('Choose Countries', sorted(country_acronyms.keys()))  # Input by the user of the name of the country or countries
+#selecting different countries using a multiselect box from the keys of the dictionary
+countnames = st.multiselect('Choose Countries', sorted(country_acronyms.keys()))  
 
-def countries_to_acronyms(countnames):  # Defining a function
+def countries_to_acronyms(countnames):  #we created a function which appends the country names selected into a list in order to have those acronyms saved for the dataframes displayed.
     acronyms = []
     for countname in countnames:
-        if countname in country_acronyms.keys():
-            acronyms.append(country_acronyms[countname])
+        if countname in country_acronyms.keys(): #find the Country name selected
+            acronyms.append(country_acronyms[countname]) #append to the acronyms list the respective accronym
     return acronyms
 
-acronym_c = countries_to_acronyms(countnames)
+acronym_c = countries_to_acronyms(countnames) #assigning the list of acronyms a variable
 
 
-st.write('The selected countries are:', ', '.join(acronym_c))  # Display selected countries as a string
+st.write('The selected countries are:', ', '.join(acronym_c))  # Display selected countries as well as their acronyms string 
 
-
-st.text('Table of Partner Contributions per Country')
-def display_dataframe(df2, acronyms):
-    df2 = df2[df2['Acronym'].isin(acronyms)]
-    df2_part = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'ecContribution':['sum']})
-    df2_part = df2_part.reset_index()
+#Generate a dataframe of partner contributions
+st.text('Table of Partner Contributions per Country Selected')
+def display_dataframe(df2, acronyms): #creating a function for a dataframe of partner contributions per country
+    df2 = df2[df2['Acronym'].isin(acronyms)] #filtering by the countries selected
+    df2_part = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'ecContribution':['sum']}) #grouping a dataframe by different attributes and aggregating by the sum of Ec Contribution
+    df2_part = df2_part.reset_index() 
     df2_part = df2_part.sort_values(by=('ecContribution', 'sum'), ascending=False)  # Sorting by sum of ecContribution in descending order
     return df2_part
 
-participants = display_dataframe(df2, acronym_c)
-st.write(participants, index=False)
+participants = display_dataframe(df2, acronym_c) #calling the dataframe from the function a variable 'participants'
+st.write(participants, index=False) #displaying the dataframe
 
-# Part 4: generate a new project dataframe with project coordinators from the selected countries and order it in ascending order by 'shortName'
-st.text('Table of Project Coordinators per Country')
-df2 = df2[df2['Acronym'].isin(acronym_c)]
-df2['Coordinator'] = (df2['role'] == 'coordinator') * 1
-pjc_df = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'Coordinator': ['sum']})
-pjc_df = pjc_df[pjc_df[('Coordinator', 'sum')] > 0].reset_index() #only visualize those which have been coordinators
-#pjc_df = pjc_df.reset_index()
-pjc_df = pjc_df.sort_values('shortName')  # Ordered by shortName
+# Generate a new project dataframe with project coordinators from the selected countries and order it in ascending order by 'shortName'
+st.text('Table of Project Coordinators per Country Selected')
+df2 = df2[df2['Acronym'].isin(acronym_c)] #filtering by chosen countries
+df2['Coordinator'] = (df2['role'] == 'coordinator') * 1 #selecting those which have a coordinator role and transforming it into integer
+pjc_df = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'Coordinator': ['sum']}) #display by aggregation of coordinator
+pjc_df = pjc_df[pjc_df[('Coordinator', 'sum')] > 0].reset_index() #only visualize those which have been coordinators at least onc
+pjc_df = pjc_df.sort_values('shortName')  #ordering by shortName
 
-st.write(pjc_df, index=False)
+st.write(pjc_df, index=False) #displaying the dataframe 
 
+#Creating CSV files for both data frames created
 st.text('Download the Data Below')
-# The system shall save the generated datasets (participants, and project coordinators) in CSV files. (There should be 2 buttons to download data).
+#Button 1: Dataframe 1 - Participants and Total EcContribution per countries selected
 @st.cache  # IMPORTANT: Cache the conversion to prevent computation on every rerun
 def convert_participants(participants):
     return participants.to_csv().encode('utf-8')
 st.download_button(label="Participants CSV", data=convert_participants(participants), file_name='participants.csv', mime='text/csv')
+
+#Button 2: Dataframe 2 - Coordinators per countries selected. 
 @st.cache  # IMPORTANT: Cache the conversion to prevent computation on every rerun
 def convert_projectcoordinators(pjc_df):
     return pjc_df.to_csv().encode('utf-8')
 st.download_button(label="Project Coordinators CSV", data=convert_projectcoordinators(pjc_df), file_name='projectcoordinators.csv', mime='text/csv')
 
-
-for country in countnames:
+#Optional - Interactivity
+for country in countnames: #creating a loop to show graphs per country selected
     st.subheader(f"Total Contributions Evolution for {country}")
-    selected_country_data = df2[df2['Country'] == country]
-    selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,2023
+    selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
+    selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
 
     # Group by year and activity type to get total contributions
     contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
 
-
-    #option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
     # Plotting
     st.bar_chart(contributions_by_year_activity)
 
     #Selecting by activity type
     option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
 
-    #plotting the options
+    #plotting the options of each country per activity type 
     st.bar_chart(contributions_by_year_activity[option])
     
 
