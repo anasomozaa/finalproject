@@ -41,7 +41,7 @@ st.title('Partner Search App')
 #country_list = df2['Country'].unique()  # Selecting the unique country names list
 country_acronyms = {'Belgium': 'BE', 'Bulgaria': 'BG', 'Czechia': 'CZ', 'Denmark': 'DK', 'Germany':
                     'DE', 'Estonia': 'EE', 'Ireland': 'IE', 'Greece': 'EL', 'Spain': 'ES', 'France': 'FR',
-                    'Croatia': 'HR', 'Italy': 'IT', 'Cyprus': 'CY', 'Latvia': 'LV', 'Lithuania': 'LT',
+                    'Croatia': 'HR', 'Italy': 'IT', 'Cyprus': 'CH', 'Latvia': 'LV', 'Lithuania': 'LT',
                     'Luxembourg': 'LU', 'Hungary': 'HU', 'Malta': 'MT', 'Netherlands': 'NL', 'Austria': 'AT',
                     'Poland': 'PL', 'Portugal': 'PT', 'Romania': 'RO', 'Slovenia': 'SI', 'Slovakia': 'SK',
                     'Finland': 'FI', 'Sweden': 'SE'}
