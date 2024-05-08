@@ -98,7 +98,7 @@ for country in countnames:
     selected_country_data['year'] = selected_country_data['year'].astype(str)
     
     option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
-    if selected_country_data['activityType'] is not in selected_activity_types:
+    if selected_country_data['activityType'] not in selected_activity_types:
         st.write('There are no activities selected that correspond to this country' 
     else:
 
