@@ -99,7 +99,7 @@ for country in countnames:
     
     option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
     if selected_country_data['activityType'] not in selected_activity_types:
-        st.write('There are no activities selected that correspond to this country' 
+        st.write('There are no activities selected that correspond to this country' )
     else:
 
         # Group by year and activity type to get total contributions
