@@ -96,17 +96,20 @@ for country in countnames:
     selected_country_data = df2[df2['Country'] == country]
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,2023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
-
+    
     option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
-   
+    if selected_country_data['activityType'] is not in selected_activity_types:
+        st.write('There are no activities selected that correspond to this country' 
+    else:
 
-    # Group by year and activity type to get total contributions
-    contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
+        # Group by year and activity type to get total contributions
+        contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
+    
     
 
     # Plotting
     #st.bar_chart(contributions_by_year_activity)
-    st.bar_chart(contributions_by_year_activity[option])
+        st.bar_chart(contributions_by_year_activity[option])
 
 
 conn.close()
