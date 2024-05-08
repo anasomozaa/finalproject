@@ -100,8 +100,8 @@ for country in countnames:
     contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
     
     # Plotting
-    #st.bar_chart(contributions_by_year_activity)
-        st.bar_chart(contributions_by_year_activity[option])
+    st.bar_chart(contributions_by_year_activity)
+    #st.bar_chart(contributions_by_year_activity[option])
 
 
 conn.close()
