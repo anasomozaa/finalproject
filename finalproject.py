@@ -103,8 +103,8 @@ for country in countnames: #creating a loop to show graphs per country selected
     selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
- 
-    if country == 'Croatia' or 'Estonia' or 'Malta':
+
+    if country in ['Croatia', 'Estonia', 'Malta']:  # Check if country is in the excluded countries list
         st.write('This country has no partner data')
     else:
         # Group by year and activity type to get total contributions
