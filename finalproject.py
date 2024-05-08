@@ -34,7 +34,7 @@ df2 = df2.rename(columns={'acronym': 'organization_acronym'})
 
 st.title('Partner Search App')
 
-country_list = df2['Country'].unique()  # Selecting the unique country names list
+#country_list = df2['Country'].unique()  # Selecting the unique country names list
 country_acronyms = {'Belgium': 'BE', 'Bulgaria': 'BG', 'Czechia': 'CZ', 'Denmark': 'DK', 'Germany':
                     'DE', 'Estonia': 'EE', 'Ireland': 'IE', 'Greece': 'EL', 'Spain': 'ES', 'France': 'FR',
                     'Croatia': 'HR', 'Italy': 'IT', 'Cyprus': 'CY', 'Latvia': 'LV', 'Lithuania': 'LT',
