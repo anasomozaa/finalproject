@@ -42,7 +42,6 @@ country_acronyms = {'Belgium': 'BE', 'Bulgaria': 'BG', 'Czechia': 'CZ', 'Denmark
                     'Poland': 'PL', 'Portugal': 'PT', 'Romania': 'RO', 'Slovenia': 'SI', 'Slovakia': 'SK',
                     'Finland': 'FI', 'Sweden': 'SE'}
 countnames = st.multiselect('Choose Countries', sorted(country_acronyms.keys()))  # Input by the user of the name of the country or countries
-activity_types = st.multiselect('Choose Activity Types', sorted(df2['activityType'].unique()))
 
 def countries_to_acronyms(countnames):  # Defining a function
     acronyms = []
@@ -52,25 +51,25 @@ def countries_to_acronyms(countnames):  # Defining a function
     return acronyms
 
 acronym_c = countries_to_acronyms(countnames)
-selected_activity_types = [f"'{activity_type}'" for activity_type in activity_types]  # Format activity types for display
+
 
 st.write('The selected countries are:', ', '.join(acronym_c))  # Display selected countries as a string
-st.write('The selected activity types are:', ', '.join(selected_activity_types))  # Display selected activity types as a string
+
 
 st.text('Table of Partner Contributions per Country')
-def display_dataframe(df2, acronyms, activity_types):
-    df2 = df2[df2['Acronym'].isin(acronyms) & df2['activityType'].isin(activity_types)]
+def display_dataframe(df2, acronyms):
+    df2 = df2[df2['Acronym'].isin(acronyms)]
     df2_part = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'ecContribution':['sum']})
     df2_part = df2_part.reset_index()
     df2_part = df2_part.sort_values(by=('ecContribution', 'sum'), ascending=False)  # Sorting by sum of ecContribution in descending order
     return df2_part
 
-participants = display_dataframe(df2, acronym_c, activity_types)
+participants = display_dataframe(df2, acronym_c)
 st.write(participants, index=False)
 
 # Part 4: generate a new project dataframe with project coordinators from the selected countries and order it in ascending order by 'shortName'
 st.text('Table of Project Coordinators per Country')
-df2 = df2[df2['Acronym'].isin(acronym_c) & df2['activityType'].isin(activity_types)]
+df2 = df2[df2['Acronym'].isin(acronym_c)]
 df2['Coordinator'] = (df2['role'] == 'coordinator') * 1
 pjc_df = df2.groupby(['name','shortName', 'activityType', 'organizationURL']).agg({'Coordinator': ['sum']})
 pjc_df = pjc_df[pjc_df[('Coordinator', 'sum')] > 0].reset_index() #only visualize those which have been coordinators
@@ -96,17 +95,10 @@ for country in countnames:
     selected_country_data = df2[df2['Country'] == country]
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,2023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
-    
-    option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
-    if selected_country_data['activityType'] not in selected_activity_types:
-        st.write('There are no activities selected that correspond to this country' )
-    else:
 
-        # Group by year and activity type to get total contributions
-        contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
+    # Group by year and activity type to get total contributions
+    contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
     
-    
-
     # Plotting
     #st.bar_chart(contributions_by_year_activity)
         st.bar_chart(contributions_by_year_activity[option])
