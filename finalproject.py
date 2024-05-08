@@ -96,26 +96,31 @@ def convert_projectcoordinators(pjc_df):
     return pjc_df.to_csv().encode('utf-8')
 st.download_button(label="Project Coordinators CSV", data=convert_projectcoordinators(pjc_df), file_name='projectcoordinators.csv', mime='text/csv')
 
+
 #Optional - Interactivity
 for country in countnames: #creating a loop to show graphs per country selected
-    st.subheader(f"Total Contributions Evolution by Activity Type for {country} ")
-    selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
-    selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
-    selected_country_data['year'] = selected_country_data['year'].astype(str)
+    if country in countnames == 'Croatia' or 'Estonia' or 'Malta':
+        st.write('This country has no partner data')
+    else:
+        st.subheader(f"Total Contributions Evolution by Activity Type for {country} ")
+        selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
+        selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
+        selected_country_data['year'] = selected_country_data['year'].astype(str)
+ 
 
-    # Group by year and activity type to get total contributions
-    contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
+        # Group by year and activity type to get total contributions
+        contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
 
-    # Plotting
-    st.bar_chart(contributions_by_year_activity)
+        # Plotting
+        st.bar_chart(contributions_by_year_activity)
 
-    #Selecting by activity type
-    option = st.selectbox(f'Choose to view Contributions per specific Activity Type for {country}', selected_country_data['activityType'].unique())
+        #Selecting by activity type
+        option = st.selectbox(f'Choose to view Contributions per specific Activity Type for {country}', selected_country_data['activityType'].unique())
 
-    #plotting the options of each country per activity type 
-    st.bar_chart(contributions_by_year_activity[option])
+        #plotting the options of each country per activity type 
+        st.bar_chart(contributions_by_year_activity[option])
     
-
+#croatia estonia malta
 
 
 conn.close()
