@@ -100,7 +100,7 @@ for country in countnames:
     contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
 
 
-    option = st.selectbox('Choose to see the specific activity', contributions_by_year['activityType'].unique())
+    option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
     # Plotting
     #st.bar_chart(contributions_by_year_activity)
     st.bar_chart(contributions_by_year_activity[option])
