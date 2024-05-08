@@ -99,15 +99,14 @@ st.download_button(label="Project Coordinators CSV", data=convert_projectcoordin
 
 #Optional - Interactivity
 for country in countnames: #creating a loop to show graphs per country selected
-    if country in countnames == 'Croatia' or 'Estonia' or 'Malta':
+    st.subheader(f"Total Contributions Evolution by Activity Type for {country} ")
+    selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
+    selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
+    selected_country_data['year'] = selected_country_data['year'].astype(str)
+ 
+    if country == 'Croatia' or 'Estonia' or 'Malta':
         st.write('This country has no partner data')
     else:
-        st.subheader(f"Total Contributions Evolution by Activity Type for {country} ")
-        selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
-        selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
-        selected_country_data['year'] = selected_country_data['year'].astype(str)
- 
-
         # Group by year and activity type to get total contributions
         contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
 
