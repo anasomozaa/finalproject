@@ -97,16 +97,16 @@ for country in countnames:
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,2023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
 
+    option = st.selectbox('Choose to see the specific activity', selected_country_data['activityType'].unique())
+   
+
     # Group by year and activity type to get total contributions
     contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
+    
 
     # Plotting
     #st.bar_chart(contributions_by_year_activity)
+     st.bar_chart(contributions_by_year_activity[option])
 
-
-    pivot_grants =  selected_country_data.pivot(index='year', columns='activityType', values='ecContribution')
-    st.bar_chart(pivot_grants)
-    option = st.selectbox('Choose to see the specific activity', df2['activityType'].unique())
-    st.bar_chart(pivot_grants[option])
 
 conn.close()
