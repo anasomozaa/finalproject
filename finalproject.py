@@ -104,7 +104,7 @@ for country in countnames:
     #st.bar_chart(contributions_by_year_activity)
 
 
-    pivot_grants =  contributions_by_year_activity.pivot(index='year', columns='activityType', values='ecContribution')
+    pivot_grants =  selected_country_data.pivot(index='year', columns='activityType', values='ecContribution')
     st.bar_chart(pivot_grants)
     option = st.selectbox('Choose to see the specific activity', df2['activityType'].unique())
     st.bar_chart(pivot_grants[option])
