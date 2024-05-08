@@ -104,22 +104,19 @@ for country in countnames: #creating a loop to show graphs per country selected
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
 
-    if country in ['Croatia', 'Estonia', 'Malta']:  # Check if country is in the excluded countries list
-        st.write('This country has no partner data')
+    if country in ['Croatia', 'Estonia', 'Malta']:  #creating a list of countries which do not have partner data to display
+        st.write('This country has no partner data') #if they are chosen a graph will not show, instead this
     else:
-        # Group by year and activity type to get total contributions
+        # Group by year and activity type to get total contributions of those countries which do have partner data
         contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
 
-        # Plotting
+        # Graph 1: Plot a bar chart of the contribution evolution by year and activities 
         st.bar_chart(contributions_by_year_activity)
 
-        #Selecting by activity type
+        #Graph 2: Selecting by activity type
         option = st.selectbox(f'Choose to view Contributions per specific Activity Type for {country}', selected_country_data['activityType'].unique())
 
         #plotting the options of each country per activity type 
         st.bar_chart(contributions_by_year_activity[option])
-    
-#croatia estonia malta
 
-
-conn.close()
+conn.close() #closing the connection to the database we are accessing.
