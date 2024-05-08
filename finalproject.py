@@ -98,10 +98,14 @@ for country in countnames:
 
     # Group by year and activity type to get total contributions
     contributions_by_year_activity = selected_country_data.groupby(['year', 'activityType'])['ecContribution'].sum().unstack()
-    
+    pivot_grants = contributions_by_year_activity.pivot(index='year', columns='activityType', values='ecContribution')
+
+    option = st.selectbox('Choose to see the specific activity', df2['activityType'].unique())
     # Plotting
     st.bar_chart(contributions_by_year_activity)
     #st.bar_chart(contributions_by_year_activity[option])
+    st.bar_chart(pivot_grants[option])
+
 
 
 conn.close()
