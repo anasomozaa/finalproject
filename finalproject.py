@@ -94,7 +94,7 @@ st.download_button(label="Project Coordinators CSV", data=convert_projectcoordin
 
 #Optional - Interactivity
 for country in countnames: #creating a loop to show graphs per country selected
-    st.subheader(f"Total Contributions Evolution for {country}")
+    st.subheader(f"Total Contributions Evolution by Activity Type for {country} ")
     selected_country_data = df2[df2['Country'] == country] #filtering per country in the select box 
     selected_country_data['year'] = selected_country_data['year'].astype(int) #so that the year is displayed as 2023 not 2,023
     selected_country_data['year'] = selected_country_data['year'].astype(str)
